@@ -1,0 +1,22 @@
+services:
+    backend:
+        build: backend
+        restart: unless-stopped
+        ports:
+            - 3000:3000
+
+    database:
+        container_name: tennis_database
+        image: postgres:17.0
+        restart: unless-stopped
+        env_file:
+            - project.env
+
+    database-migrations:
+        image: flyway/flyway:10
+        env_file:
+            - project.env
+        volumes:
+            - ./database-migrations:/flyway/sql
+        command: -connectRetries=60 -baselineOnMigrate=true migrate
+
