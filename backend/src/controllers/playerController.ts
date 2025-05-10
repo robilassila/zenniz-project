@@ -3,6 +3,10 @@ import { getAllPlayers, addPlayer, getPlayerById } from '../repositories/playerR
 import { validatePlayer, validatePlayerParams } from '../validators/playerValidator';
 import { getPlayerMatchesById } from '../repositories/matchRepository';
 
+function handleValidationError(res: Response, errors: any) {
+    res.status(400).json(errors);
+}
+
 export const getPlayers = async (req: Request, res: Response) => {
     const players = await getAllPlayers();
     res.json(players);
@@ -11,7 +15,7 @@ export const getPlayers = async (req: Request, res: Response) => {
 export const getPlayer = async (req: Request, res: Response) => {
     const validation = validatePlayerParams(req.params);
     if (!validation.success || !validation.data) {
-        res.status(400).json(validation.errors);
+        handleValidationError(res, validation.errors);
         return;
     }
     const player = await getPlayerById(validation.data);
@@ -25,7 +29,7 @@ export const getPlayer = async (req: Request, res: Response) => {
 export const createPlayer = async (req: Request, res: Response) => {
     const validation = validatePlayer(req.body);
     if (!validation.success || !validation.data) {
-        res.status(400).json(validation.errors);
+        handleValidationError(res, validation.errors);
         return;
     }
     try {
@@ -40,7 +44,7 @@ export const createPlayer = async (req: Request, res: Response) => {
 export const getPlayerMatches = async (req: Request, res: Response) => {
     const validation = validatePlayerParams(req.params);
     if (!validation.success || !validation.data) {
-        res.status(400).json(validation.errors);
+        handleValidationError(res, validation.errors);
         return;
     }
     const matches = await getPlayerMatchesById(validation.data);
@@ -49,4 +53,23 @@ export const getPlayerMatches = async (req: Request, res: Response) => {
         return;
     }
     res.json(matches);
+}
+
+export const getPlayerStats = async (req: Request, res: Response) => {
+    const validation = validatePlayerParams(req.params);
+    if (!validation.success || !validation.data) {
+        handleValidationError(res, validation.errors);
+        return;
+    }
+    const pId = validation.data;
+    const matches = await getPlayerMatchesById(pId);
+    if (!matches) {
+        res.status(404).json('Player not found');
+        return;
+    }
+    const nofWins = matches.filter((match) => match.winner_id === pId).length;
+    const nofMatches = matches.length;
+    const winPercent = Math.round(nofWins / nofMatches * 1000) / 10; // One decimal precision
+    const result = { wins: nofWins, losses: nofMatches - nofWins, total: nofMatches, "win-%": winPercent ? winPercent + " %": "0 %"}
+    res.json(result);
 }
