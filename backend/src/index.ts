@@ -1,5 +1,6 @@
 import express, { Request, Response } from 'express';
 import playerRoutes from './routes/playerRoutes';
+import matchRoutes from './routes/matchRoutes'
 
 const app = express();
 const port = 3000;
@@ -11,6 +12,7 @@ app.get('/', (req: Request, res: Response) => {
 });
 
 app.use('/players', playerRoutes)
+app.use('/matches', matchRoutes)
 
 
 app.listen(port, () => {
