@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { getAllPlayers, addPlayer, getPlayerById } from '../repositories/playerRepository';
 import { validatePlayer, validatePlayerParams } from '../validators/playerValidator';
-import { getPlayerMatchesById } from '../repositories/matchRepository';
+import { getPlayerMatchesWithSets, getPlayerStatistics } from '../services/matchService';
 
 function handleValidationError(res: Response, errors: any) {
     res.status(400).json(errors);
@@ -47,7 +47,7 @@ export const getPlayerMatches = async (req: Request, res: Response) => {
         handleValidationError(res, validation.errors);
         return;
     }
-    const matches = await getPlayerMatchesById(validation.data);
+    const matches = await getPlayerMatchesWithSets(validation.data);
     if (!matches) {
         res.status(404).json('Player not found');
         return;
@@ -62,14 +62,12 @@ export const getPlayerStats = async (req: Request, res: Response) => {
         return;
     }
     const pId = validation.data;
-    const matches = await getPlayerMatchesById(pId);
-    if (!matches) {
+    const stats = await getPlayerStatistics(pId)
+
+    if (!stats) {
         res.status(404).json('Player not found');
         return;
     }
-    const nofWins = matches.filter((match) => match.winner_id === pId).length;
-    const nofMatches = matches.length;
-    const winPercent = Math.round(nofWins / nofMatches * 1000) / 10; // One decimal precision
-    const result = { wins: nofWins, losses: nofMatches - nofWins, total: nofMatches, "win-%": winPercent ? winPercent + " %": "0 %"}
-    res.json(result);
+    
+    res.json(stats);
 }

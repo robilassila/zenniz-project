@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
-import { addMatch, getAllMatches } from '../repositories/matchRepository';
 import { validateMatch } from '../validators/matchValidator';
+import { addMatchWithSets, getAllMatchesWithSets } from '../services/matchService';
 
 export const getMatches = async (req: Request, res: Response) => {
-    const matches = await getAllMatches();
+    const matches = await getAllMatchesWithSets();
     res.json(matches);
 };
 
@@ -14,8 +14,9 @@ export const createMatch = async (req: Request, res: Response) => {
         return;
     }
     try {
-        const match = await addMatch(validation.data);
-        res.status(201).json(match);
+        const { newMatch, newSets } = validation.data
+        const result = await addMatchWithSets(newMatch, newSets)
+        res.status(201).json(result);
     }
     catch (error) {
         res.status(500).json('Failed to create match ' + error);

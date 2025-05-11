@@ -1,0 +1,55 @@
+GET http://localhost:3000/players
+
+###
+
+GET http://localhost:3000/players/1
+
+###
+
+GET http://localhost:3000/players/1/matches
+
+###
+
+GET http://localhost:3000/players/1/stats
+
+
+###
+
+POST http://localhost:3000/players
+content-type: application/json
+
+{ 
+    "name": "Seppo Täkkinen", 
+    "date_of_birth": "1992-09-05" 
+}
+
+###
+
+POST http://localhost:3000/players
+content-type: application/json
+
+{
+    "name": "Jarmo Nieminen",
+    "date_of_birth": "1982-02-29" 
+}
+
+###
+
+POST http://localhost:3000/matches
+content-type: application/json
+
+{
+    "player_one_id": 1,
+    "player_two_id": 2, 
+    "winner_id": 2, 
+    "start_time": "2025-05-11T14:00:00Z",
+    "end_time": "2025-05-11T16:30:00Z",
+    "sets": [
+        { "player_one_games": 7, "player_two_games": 6, "tiebreak": 2 },
+        { "player_one_games": 6, "player_two_games": 3 }
+    ]
+}
+
+###
+
+GET http://localhost:3000/matches

@@ -20,9 +20,19 @@ export interface MatchTable {
     end_time: Date
 }
 
+export interface MatchSetTable {
+    id: Generated<number>
+    match_id: number,
+    set_number: number,
+    player_one_games: number,
+    player_two_games: number,
+    tiebreak?: number
+}
+
 export interface Database {
     players: PlayerTable
     matches: MatchTable
+    match_sets: MatchSetTable
 }
 
 export type Player = Selectable<PlayerTable>
@@ -31,3 +41,5 @@ export type PlayerUpdate = Updateable<PlayerTable>
 
 export type Match = Selectable<MatchTable>
 export type NewMatch = Insertable<MatchTable>
+
+export type NewSet = Insertable<MatchSetTable>
