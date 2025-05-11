@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { NewPlayer } from "../types";
+import { NewPlayer } from "../db/dbTypes";
 
 const playerSchema = z.object({
     name: z.string(),

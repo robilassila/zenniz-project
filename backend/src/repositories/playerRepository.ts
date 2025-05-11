@@ -1,5 +1,5 @@
-import { db } from '../database'
-import { Player, NewPlayer, PlayerUpdate } from '../types'
+import { db } from '../db/database'
+import { Player, NewPlayer, PlayerUpdate } from '../db/dbTypes'
 
 export async function getAllPlayers() {
     const players = await db

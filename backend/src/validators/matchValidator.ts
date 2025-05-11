@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { NewMatch } from "../types";
+import { NewMatch } from "../db/dbTypes";
 
 const matchSchema = z.object({
     player_one_id: z.number(),

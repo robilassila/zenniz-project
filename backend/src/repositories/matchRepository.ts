@@ -1,5 +1,5 @@
-import { db } from '../database'
-import { Match, NewMatch } from '../types'
+import { db } from '../db/database'
+import { Match, NewMatch } from '../db/dbTypes'
 import { getPlayerById } from './playerRepository';
 
 export async function getAllMatches() {
