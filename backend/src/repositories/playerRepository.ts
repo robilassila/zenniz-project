@@ -26,3 +26,13 @@ export async function addPlayer(player: NewPlayer) {
         .executeTakeFirstOrThrow()
     return res;
 }
+
+export async function updatePlayer(id: number, player: PlayerUpdate) {
+    const res = await db
+        .updateTable('players')
+        .set(player)
+        .where('id', '=', id)
+        .returningAll()
+        .executeTakeFirst()
+    return res;
+}

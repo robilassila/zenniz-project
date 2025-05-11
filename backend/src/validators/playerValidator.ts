@@ -1,8 +1,8 @@
 import { z } from "zod";
-import { NewPlayer } from "../db/dbTypes";
+import { NewPlayer, PlayerUpdate } from "../db/dbTypes";
 
 const playerSchema = z.object({
-    name: z.string(),
+    name: z.string().min(3),
     date_of_birth: z.coerce.date()
 });
 
@@ -17,6 +17,16 @@ export function validatePlayer(data: any) {
     }
     const formatted = result.error.format();
     return { success: result.success, errors: formatted };
+}
+
+export function validatePlayerUpdate(data: any) {
+    const result = playerSchema.partial().safeParse(data);
+    if (result.success) {
+        return { success: result.success, data: result.data as PlayerUpdate}
+    }
+    const formatted = result.error.format();
+    console.log(formatted);
+    return { success: result.success, errors: formatted }; 
 }
 
 export function validatePlayerParams(data: any) {

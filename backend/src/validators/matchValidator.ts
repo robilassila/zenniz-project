@@ -2,9 +2,9 @@ import { z } from "zod";
 import { NewMatch, NewSet } from "../db/dbTypes";
 
 const setSchema = z.object({
-    player_one_games: z.number().min(0).max(7),
-    player_two_games: z.number().min(0).max(7),
-    tiebreak: z.number().nonnegative().optional()
+    player_one_games: z.number().int().min(0).max(7),
+    player_two_games: z.number().int().min(0).max(7),
+    tiebreak: z.number().int().nonnegative().optional()
 });
 
 const matchSchema = z.object({

@@ -53,3 +53,13 @@ content-type: application/json
 ###
 
 GET http://localhost:3000/matches
+
+### 
+
+PUT http://localhost:3000/players/2
+content-type: application/json
+
+{
+    "name": "Ympyrän Neliö",
+    "date_of_birth": "1985-03-15"
+}
