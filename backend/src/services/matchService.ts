@@ -22,7 +22,7 @@ export async function getAllMatchesWithSets() {
 
     const matchesWithSets = await Promise.all(matches.map(async (match) => {
         const sets = await getMatchSets(match.id)
-        return { ...match, sets: sets}
+        return { ...match, sets: sets }
     }));
 
     return matchesWithSets;
@@ -38,7 +38,7 @@ export async function getPlayerMatchesWithSets(player_id: number) {
 
     const matchesWithSets = await Promise.all(matches.map(async (match) => {
         const sets = await getMatchSets(match.id)
-        return { ...match, sets: sets}
+        return { ...match, sets: sets }
     }));
 
     return matchesWithSets;

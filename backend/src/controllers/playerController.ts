@@ -1,14 +1,20 @@
 import { Request, Response } from 'express';
-import { getAllPlayers, addPlayer, getPlayerById, updatePlayer } from '../repositories/playerRepository';
+import { addPlayer, updatePlayer } from '../repositories/playerRepository';
 import { validatePlayer, validatePlayerParams, validatePlayerUpdate } from '../validators/playerValidator';
 import { getPlayerMatchesWithSets, getPlayerStatistics } from '../services/matchService';
+import { getPlayersWithStats, getPlayerWithStats } from '../services/playerService';
 
 function handleValidationError(res: Response, errors: any) {
     res.status(400).json(errors);
 }
 
 export const getPlayers = async (req: Request, res: Response) => {
-    const players = await getAllPlayers();
+    const { sortBy } = req.query;
+    let players = await getPlayersWithStats()
+    if (sortBy === 'wins') {
+        players.sort((p1, p2) => (p2.stats?.wins || 0) - (p1.stats?.wins || 0))
+    }
+    
     res.json(players);
 };
 
@@ -18,8 +24,8 @@ export const getPlayer = async (req: Request, res: Response) => {
         handleValidationError(res, validation.errors);
         return;
     }
-    const player = await getPlayerById(validation.data);
-    if (!player) {
+    const player = await getPlayerWithStats(validation.data);
+    if (!player.id) {
         res.status(404).json('Player not found');
         return;
     }

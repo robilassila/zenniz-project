@@ -1,5 +1,5 @@
 import { db } from '../db/database'
-import { Match, NewMatch } from '../db/dbTypes'
+import { NewMatch } from '../db/dbTypes'
 
 export async function getAllMatches() {
     const matches = await db
