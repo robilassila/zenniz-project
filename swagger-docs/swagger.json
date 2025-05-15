@@ -1,0 +1,376 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Zenniz backend API",
+        "description": "Zenniz backend project API for player and match management"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:3000"
+        }
+    ],
+    "tags": [ 
+        {
+            "name": "Players",
+            "description": "Operations related to players"
+        },
+        {
+            "name": "Matches",
+            "description": "Operations related to matches"
+        }
+    ],
+    "paths": {
+        "/players": {
+            "get": {
+                "tags": ["Players"],
+                "summary": "Get a list of all registered players",
+                "description": "Returns a list of all registered players in JSON format",
+                "parameters": [
+                    {
+                        "name": "sortBy",
+                        "in": "query",
+                        "description": "Sort players by wins",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": ["wins"]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "A list of players with stats",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/PlayerWithStats"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": ["Players"],
+                "summary": "Add a new player",
+                "description": "Adds a new player to the database",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Player"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Player created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PlayerResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Something went wrong"
+                    }
+                }
+            }
+        },
+        "/players/{playerId}": {
+            "get": {
+                "tags": ["Players"],
+                "summary": "Find player by ID",
+                "description": "Returns a single player in JSON format",
+                "parameters": [
+                    {
+                        "name": "playerId",
+                        "in": "path",
+                        "required": true,
+                        "description": "ID of the player to return",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Player details",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PlayerWithStats"
+                                }
+                            }
+                        }
+                    },
+                    "400": { "description": "Invalid ID supplied" },
+                    "404": { "description": "Player not found" }
+                }
+            },
+            "put": {
+                "tags": ["Players"],
+                "summary": "Update player details",
+                "description": "Update player name or date of birth",
+                "parameters": [
+                    {
+                        "name": "playerId",
+                        "in": "path",
+                        "required": true,
+                        "description": "ID of the player to update",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Player"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Updated player",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PlayerResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": { "description": "Invalid ID supplied" },
+                    "404": { "description": "Player not found" }
+                }
+            }
+        },
+        "/players/{playerId}/matches": {
+            "get": {
+                "tags": ["Players"],
+                "summary": "Returns all matches this player has played",
+                "description": "Returns a list of matches the player has participated in",
+                "parameters": [
+                    {
+                        "name": "playerId",
+                        "in": "path",
+                        "required": true,
+                        "description": "ID of the player",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Player's matches",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/MatchResponse"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": { "description": "Invalid ID supplied" },
+                    "404": { "description": "Player not found" }
+                }
+            }
+        },
+        "/matches": {
+            "get": {
+                "tags": ["Matches"],
+                "summary": "List of all matches",
+                "description": "Returns a list of played matches in JSON format",
+                "responses": {
+                    "200": {
+                        "description": "A list of matches",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Match"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": ["Matches"],
+                "summary": "Record a new match",
+                "description": "Records a new match to the database",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Match"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Match created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/MatchResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Something went wrong"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Player": {
+                "type": "object",
+                "required": ["name", "date_of_birth"],
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "description": "The player name"
+                    },
+                    "date_of_birth": {
+                        "type": "string",
+                        "format": "date",
+                        "description": "The player's date of birth"
+                    }
+                }
+            },
+            "PlayerResponse": {
+                "allOf": [
+                    {
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "type": "integer",
+                                "description": "The player's ID"
+                            }
+                        }
+                    },
+                    { "$ref": "#/components/schemas/Player" }
+                ]
+            },
+            "PlayerWithStats": {
+                "allOf": [
+                    { "$ref": "#/components/schemas/PlayerResponse" },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "stats": {
+                                "type": "object",
+                                "properties": {
+                                    "wins": {
+                                        "type": "integer",
+                                        "description": "Number of wins the player has"
+                                    },
+                                    "losses": {
+                                        "type": "integer",
+                                        "description": "Number of losses the player has"
+                                    },
+                                    "total": {
+                                        "type": "integer",
+                                        "description": "Total amount of matches the player has played"
+                                    },
+                                    "win-%": {
+                                        "type": "string",
+                                        "description": "Win percentage the player has"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                ]
+            },
+            "Match": {
+                "type": "object",
+                "required": ["player_one_id", "player_two_id", "winner_id", "start_time", "end_time", "sets"],
+                "properties": {
+                    "player_one_id": {
+                        "type": "integer",
+                        "description": "Player one ID"
+                    },
+                    "player_two_id": {
+                        "type": "integer",
+                        "description": "Player two ID"
+                    },
+                    "winner_id": {
+                        "type": "integer",
+                        "description": "Winner ID"
+                    },
+                    "start_time": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "The match's start time"
+                    },
+                    "end_time": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "The match's end time"
+                    },
+                    "sets": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Set"
+                        }
+                    }
+                }
+            },
+            "MatchResponse": {
+                "allOf": [
+                    {
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "type": "integer",
+                                "description": "The match ID"
+                            }
+                        }
+                    },
+                    { "$ref": "#/components/schemas/Match" }
+                ]
+            },
+            "Set": {
+                "type": "object",
+                "required": ["player_one_games", "player_two_games"],
+                "properties": {
+                    "player_one_games": {
+                        "type": "integer",
+                        "description": "Number of games player one has scored in this set"
+                    },
+                    "player_two_games": {
+                        "type": "integer",
+                        "description": "Number of games player two has scored in this set"
+                    },
+                    "tiebreak": {
+                        "type": "integer",
+                        "description": "Number of points the loser of the tiebreak has scored"
+                    }
+                }
+            }
+        }
+    }
+}

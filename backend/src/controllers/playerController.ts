@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { addPlayer, updatePlayer } from '../repositories/playerRepository';
 import { validatePlayer, validatePlayerParams, validatePlayerUpdate } from '../validators/playerValidator';
-import { getPlayerMatchesWithSets, getPlayerStatistics } from '../services/matchService';
+import { getPlayerMatchesWithSets } from '../services/matchService';
 import { getPlayersWithStats, getPlayerWithStats } from '../services/playerService';
 
 function handleValidationError(res: Response, errors: any) {
@@ -15,7 +15,7 @@ export const getPlayers = async (req: Request, res: Response) => {
         players.sort((p1, p2) => (p2.stats?.wins || 0) - (p1.stats?.wins || 0))
     }
     
-    res.json(players);
+    res.status(200).json(players);
 };
 
 export const getPlayer = async (req: Request, res: Response) => {
@@ -29,7 +29,7 @@ export const getPlayer = async (req: Request, res: Response) => {
         res.status(404).json('Player not found');
         return;
     }
-    res.json(player);
+    res.status(200).json(player);
 };
 
 export const createPlayer = async (req: Request, res: Response) => {
@@ -58,24 +58,7 @@ export const getPlayerMatches = async (req: Request, res: Response) => {
         res.status(404).json('Player not found');
         return;
     }
-    res.json(matches);
-}
-
-export const getPlayerStats = async (req: Request, res: Response) => {
-    const validation = validatePlayerParams(req.params);
-    if (!validation.success || !validation.data) {
-        handleValidationError(res, validation.errors);
-        return;
-    }
-    const pId = validation.data;
-    const stats = await getPlayerStatistics(pId)
-
-    if (!stats) {
-        res.status(404).json('Player not found');
-        return;
-    }
-    
-    res.json(stats);
+    res.status(200).json(matches);
 }
 
 export const modifyPlayer = async (req: Request, res: Response) => {
@@ -101,5 +84,5 @@ export const modifyPlayer = async (req: Request, res: Response) => {
         return;
     }
 
-    res.json(player);
+    res.status(200).json(player);
 }

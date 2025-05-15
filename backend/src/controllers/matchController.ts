@@ -4,7 +4,7 @@ import { addMatchWithSets, getAllMatchesWithSets } from '../services/matchServic
 
 export const getMatches = async (req: Request, res: Response) => {
     const matches = await getAllMatchesWithSets();
-    res.json(matches);
+    res.status(200).json(matches);
 };
 
 export const createMatch = async (req: Request, res: Response) => {
