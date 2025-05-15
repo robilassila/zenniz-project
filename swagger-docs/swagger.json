@@ -203,7 +203,7 @@
                                 "schema": {
                                     "type": "array",
                                     "items": {
-                                        "$ref": "#/components/schemas/Match"
+                                        "$ref": "#/components/schemas/MatchResponse"
                                     }
                                 }
                             }
