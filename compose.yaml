@@ -6,8 +6,6 @@ services:
             - database
         ports:
             - 3000:3000
-        volumes:
-            - ./backend:/app
 
     database:
         container_name: tennis_database
