@@ -29,7 +29,7 @@ GET     /matches                    Returns a list of all registered matches
 POST    /matches                    Creates a new match
 ```
 
-Further api documentation at [http://localhost:8080](http://localhost:8080) when running the Docker container.
+Further API documentation at [http://localhost:8080](http://localhost:8080) when running the Docker container.
 
 ## Usage
 - Build and run the Docker container:
